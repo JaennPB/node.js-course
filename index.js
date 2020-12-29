@@ -4,6 +4,7 @@
 // require() function is the easiest way to include modules that exist in different files
 const fs = require("fs");
 const http = require("http");
+const url = require("url");
 
 // *******************************************
 // ************************************* files
@@ -39,13 +40,27 @@ console.log("reading file...");
 // *******************************************
 // ************************************ server
 
+// creeating servers, we get (request, response)
 const server = http.createServer((req, res) => {
-  console.log(req);
-  res.end("Hello, master. I am the new server you just created");
+  // routing
+  const pathName = req.url;
+
+  if (pathName === "/" || pathName === "/overview") {
+    res.end("Hello, master. I am the new server you just created (OVERVIEW)");
+  } else if (pathName === "/product") {
+    res.end("This is product #01");
+  } else {
+    res.writeHead(404, {
+      // http headers (piece of info about response)
+      // always send BEFORE response
+      "Content-type": "text/html",
+      "my-own-header": "this is info",
+    });
+    res.end("<h1>This page could not be found</h1>");
+  }
 });
 
+// listening for request (url changes in created server)
 server.listen(8000, "127.0.0.1", () => {
   console.log("Listening to requests on port 8000");
 });
-
-// by using 127.0.0.1:8000 as a url, a new request is created, and we get the response from created server
