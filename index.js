@@ -3,23 +3,40 @@ const url = require("url");
 const fs = require("fs");
 const { type } = require("os");
 
+// *************************************************** FUNCTIONS
+const replaceTemplate = (temp, product) => {
+  let output = temp.replace(/{%PRODUCTNAME%}/g, product.productName);
+  output = output.replace(/{%IMAGE%}/g, product.image);
+  output = output.replace(/{%PRICE%}/g, product.price);
+  output = output.replace(/{%FROM%}/g, product.from);
+  output = output.replace(/{%NUTRIENTS%}/g, product.nutrients);
+  output = output.replace(/{%QUANTITY%}/g, product.quantity);
+  output = output.replace(/{%DESCRIPTION%}/g, product.description);
+  output = output.replace(/{%ID%}/g, product.id);
+
+  if (!product.organic) {
+    output = output.replace(/{%NOT_ORGANIC%}/g, "not-organic");
+  }
+  return output;
+};
+
 // *************************************************** SYNCHRONOUSLY READING DATA
 // ********************* JSON DATA
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, "utf-8");
 const dataObject = JSON.parse(data);
 
 // ********************* OVERVIEW
-const temOverview = fs.readFileSync(
+const tempOverview = fs.readFileSync(
   `${__dirname}/templates/template-overview.html`,
   "utf-8"
 );
 // ********************* CARD
-const temCard = fs.readFileSync(
+const tempCard = fs.readFileSync(
   `${__dirname}/templates/template-card.html`,
   "utf-8"
 );
 // ********************* PRODUCT
-const temProduct = fs.readFileSync(
+const tempProduct = fs.readFileSync(
   `${__dirname}/templates/template-product.html`,
   "utf-8"
 );
@@ -31,7 +48,19 @@ const server = http.createServer((req, res) => {
 
   // OVERVIEW
   if (pathName === "/" || pathName === "/overview") {
-    res.end("This is the overview");
+    res.writeHead(200, { "Content-type": "text/html" });
+
+    // replacing html placeholders with data.json
+    // console.log(dataObject);
+    // console.log(tempCard);
+    const cardsHtml = dataObject
+      .map((el) => replaceTemplate(tempCard, el))
+      .join("");
+    // console.log(cardsHtml);
+
+    const output = tempOverview.replace("{%PRODUCT_CARDS%}", cardsHtml);
+
+    res.end(output);
 
     // PRODUCTS
   } else if (pathName === "/products") {
@@ -51,7 +80,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
+// ********************* CREATE SERVER URL
 server.listen(1234, "127.0.0.1", () => {
-  console.log("🔁 Starting Server...");
-  console.log("✅ Ready, listening...");
+  console.log("Starting Server...");
 });
