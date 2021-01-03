@@ -20,7 +20,7 @@ const replaceTemplate = (temp, product) => {
   return output;
 };
 
-// *************************************************** SYNCHRONOUSLY READING DATA
+// *************************************************** SYNCHRONOUSLY READING DATA (ONCE, AT BEGINNING OF PROGRAM)
 // ********************* JSON DATA
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, "utf-8");
 const dataObject = JSON.parse(data);
@@ -46,13 +46,12 @@ const tempProduct = fs.readFileSync(
 const server = http.createServer((req, res) => {
   const pathName = req.url;
 
+  // ======================== ROUTING
   // OVERVIEW
   if (pathName === "/" || pathName === "/overview") {
     res.writeHead(200, { "Content-type": "text/html" });
 
     // replacing html placeholders with data.json
-    // console.log(dataObject);
-    // console.log(tempCard);
     const cardsHtml = dataObject
       .map((el) => replaceTemplate(tempCard, el))
       .join("");
