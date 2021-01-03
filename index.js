@@ -5,7 +5,7 @@ const url = require("url");
 const fs = require("fs");
 
 // own modules
-const replaceTemplate = require("./modules.js/replaceTemplate");
+const replaceTemplate = require("./modules/replaceTemplate");
 
 // *************************************************** SYNCHRONOUSLY READING DATA
 // ********************* JSON DATA
