@@ -44,15 +44,14 @@ const tempProduct = fs.readFileSync(
 // *************************************************** CREATING SERVER AND ROUTING
 // ********************* CREATE SERVER
 const server = http.createServer((req, res) => {
-  const pathName = req.url;
+  // parsing url (getting url object) with url module and using destructuring to get certain properties
+  const { query, pathname } = url.parse(req.url, true);
 
   // OVERVIEW
-  if (pathName === "/" || pathName === "/overview") {
+  if (pathname === "/" || pathname === "/overview") {
     res.writeHead(200, { "Content-type": "text/html" });
 
     // replacing html placeholders with data.json
-    // console.log(dataObject);
-    // console.log(tempCard);
     const cardsHtml = dataObject
       .map((el) => replaceTemplate(tempCard, el))
       .join("");
@@ -63,11 +62,14 @@ const server = http.createServer((req, res) => {
     res.end(output);
 
     // PRODUCTS
-  } else if (pathName === "/products") {
-    res.end("This is the overview");
+  } else if (pathname === "/product") {
+    res.writeHead(200, { "Content-type": "text/html" });
+    const product = dataObject[query.id];
+    const output = replaceTemplate(tempProduct, product);
+    res.end(output);
 
     // API
-  } else if (pathName === "/api") {
+  } else if (pathname === "/api") {
     res.writeHead(200, { "Content-type": "application/json" });
     res.end(data);
 
@@ -81,6 +83,6 @@ const server = http.createServer((req, res) => {
 });
 
 // ********************* CREATE SERVER URL
-server.listen(1234, "127.0.0.1", () => {
+server.listen(8000, "127.0.0.1", () => {
   console.log("Starting Server...");
 });
