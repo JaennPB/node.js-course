@@ -15,7 +15,7 @@ const replaceTemplate = require('./modules/replaceTemplate');
 const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
 const dataObject = JSON.parse(data);
 
-// *************************************************** SLUGS
+// ********************* SLUGS
 
 const slugs = dataObject.map((el) => slugify(el.productName, { lower: true }));
 // console.log(slugs);
