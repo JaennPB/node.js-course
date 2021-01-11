@@ -1,0 +1,26 @@
+{
+  "name": "node-farm",
+  "version": "1.0.0",
+  "description": "1st node.js project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JaennPB/node.js-course.git"
+  },
+  "keywords": [
+    "app",
+    "back-end"
+  ],
+  "author": "jaenn",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JaennPB/node.js-course/issues"
+  },
+  "homepage": "https://github.com/JaennPB/node.js-course#readme",
+  "dependencies": {
+    "slugify": "^1.4.6"
+  }
+}
